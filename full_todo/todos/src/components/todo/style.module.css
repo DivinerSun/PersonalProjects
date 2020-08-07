@@ -1,0 +1,41 @@
+.todoBox {
+    width: 80%;
+    opacity: 0.6;
+}
+
+.todoBox button {
+    border-radius: 16px;
+}
+
+.filters {
+    background: wheat;
+    border-radius: 16px;
+    padding: 20px;
+    margin: 20px 20px 0;
+}
+
+.filters :global(.ant-form-item) {
+    width: 400px;
+    min-width: 240px;
+}
+
+.filters button {
+    float: right;
+}
+
+.tableBox {
+    background: wheat;
+    border-radius: 16px;
+    padding: 20px;
+    margin: 20px;
+}
+
+.tableBox > button {
+    float: right;
+    margin-bottom: 10px;
+    z-index: 10;
+}
+
+.actions button {
+    margin-right: 20px;
+}

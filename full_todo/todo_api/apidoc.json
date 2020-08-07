@@ -1,0 +1,11 @@
+{
+    "name": "TodoList项目接口文档",
+    "version": "1.0.0",
+    "description": "TodoList项目API文档",
+    "title": "TodoList API",
+    "url": "http://localhost:8000/api",
+    "sampleUrl": "http://localhost:8000/api",
+    "template": {
+        "forceLanguage": "zh_cn"
+    }
+}
