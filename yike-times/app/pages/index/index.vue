@@ -1,5 +1,5 @@
 <template>
-	<view class="content">
+	<view class="container">
 		<view class="top">
 			<view class="top-left">
 				<image src="../../static/logo.png"></image>
@@ -13,17 +13,18 @@
 			</view>
 		</view>
 		<view class="messages">
-			<view hover-class="message-item-hover" class="message-item" v-for="(item,index) in messages" :key="index">
+			<view class="message-item" v-for="(item) in messages" :key="item.id">
 				<view class="avatar">
-					<image src="../../static/logo.png"></image>
+					<text v-if="item.tip" class="tip">{{item.tip}}</text>
+					<image :src="item.avatar"></image>
 				</view>
 				<view class="infos">
 					<view class="up">
-						<text class="name">开发者的惋惜</text>
-						<text class="time">上午7:45</text>
+						<text class="name">{{item.name}}</text>
+						<text class="time">{{parseTime(item.time)}}</text>
 					</view>
 					<view class="down">
-						<text class="message-view">就是你的那额，不用点开始速不用点开始速不用点开始速不用点开始速…</text>
+						<text class="message-view">{{item.content}}</text>
 					</view>
 				</view>
 			</view>
@@ -32,123 +33,150 @@
 </template>
 
 <script>
+	import { formatTime } from '../../utils/index.js'
+	import { messageArray } from '../../utils/mock.js'
+	
 	export default {
 		data() {
 			return {
-				messages: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20],
+				messages: [],
 			}
 		},
 		onLoad() {
-
+			this.getMessages()
 		},
 		methods: {
-
+			// 时间处理
+			parseTime(date) {
+				return formatTime(date)
+			},
+			// 获取消息列表
+			getMessages() {
+				this.messages = messageArray
+			}
 		}
 	}
 </script>
 
 <style lang="scss" scoped>
-	.content {
+	.container {
 		display: flex;
 		flex-direction: column;
 		align-items: center;
 		justify-content: center;
-	}
 	 
-	.top {
-		display: flex;
-		flex-direction: row;
-		justify-content: space-between;
-		align-items: center;
-		width: 100%;
-		height: 88rpx;
-		position: fixed;
-		top: 0;
-		background: $uni-bg-color;
-		z-index: 999;
-		
-			
-		.top-left {
-			padding-left: 32rpx;
-			
-			image {
-				width:68rpx;
-				height:68rpx;
-				border-radius:16rpx;
-			}
-		}
-		
-		.top-center {
-			image {
-				width:88rpx;
-				height:42rpx;
-			}
-		}
-		
-		.top-right {
-			padding-right: 32rpx;
-			
-			.search {
-				width: 52rpx;
-				height: 52rpx;
-				margin-right: 40rpx;
-			}
-			
-			image {
-				width:48rpx;
-				height:48rpx;
-			}
-		}
-	}
-	
-	.messages {
-		width: 100%;
-		padding-top: 88rpx;
-		
-		.message-item-hover {
-			background-color: $uni-bg-color-grey;
-		}
-		
-		.message-item {
-			height: 96rpx;
-			margin: 40rpx 0;
-			padding: 10rpx 0;
+		.top {
 			display: flex;
+			flex-direction: row;
+			justify-content: space-between;
 			align-items: center;
-			
-			.avatar {
+			width: 100%;
+			height: 88rpx;
+			position: fixed;
+			top: 0;
+			background: $uni-bg-color;
+			z-index: 999;
+			padding-top: var(--status-bar-height);
+				
+			.top-left {
+				padding-left: 32rpx;
+				
 				image {
-					width: 96rpx;
-					height: 96rpx;
-					border-radius: 24rpx;
-					margin: 0 32rpx;
+					width:68rpx;
+					height:68rpx;
+					border-radius:16rpx;
 				}
 			}
 			
-			.infos {
-				width: 558rpx;
+			.top-center {
+				image {
+					width:88rpx;
+					height:42rpx;
+				}
+			}
+			
+			.top-right {
+				padding-right: 32rpx;
 				
-				.up {
-					.name {
-						font-size: 36rpx;
-						color: $uni-text-color;
+				.search {
+					width: 52rpx;
+					height: 52rpx;
+					margin-right: 40rpx;
+				}
+				
+				image {
+					width:48rpx;
+					height:48rpx;
+				}
+			}
+		}
+		
+		.messages {
+			width: 100%;
+			padding-top: calc(var(--status-bar-height) + 88rpx);
+			
+			.message-item {
+				height: 128rpx;
+				margin: 40rpx 0;
+				display: flex;
+				align-items: center;
+				
+				&:active {
+					background-color: $uni-bg-color-grey;
+				}
+				
+				.avatar {
+					.tip {
+						display: inline-block;
+						background: $uni-color-error;
+						color: $uni-text-color-inverse;
+						height: 36rpx;
+						line-height: 36rpx;
+						min-width: 36rpx;
+						padding: 0 2rpx;
+						border-radius: $uni-border-radius-circle;
+						text-align: center;
+						font-size: 24rpx;
+						position: absolute;
+						left: 100rpx;
+						margin-top: -10rpx;
+						z-index: 99;
 					}
 					
-					.time {
-						font-size: 24rpx;
-						color: $uni-text-color-disable;
-						float: right;
+					image {
+						width: 96rpx;
+						height: 96rpx;
+						border-radius: 24rpx;
+						margin: 0 32rpx;
+						background: $uni-color-primary;
 					}
 				}
 				
-				.down {
-					overflow: hidden;
-					white-space: nowrap;
-					text-overflow: ellipsis;
+				.infos {
+					width: 558rpx;
 					
-					.message-view {
-						font-size: 28rpx;
-						color: $uni-text-color-grey;
+					.up {
+						.name {
+							font-size: 36rpx;
+							color: $uni-text-color;
+						}
+						
+						.time {
+							font-size: 24rpx;
+							color: $uni-text-color-disable;
+							float: right;
+						}
+					}
+					
+					.down {
+						overflow: hidden;
+						white-space: nowrap;
+						text-overflow: ellipsis;
+						
+						.message-view {
+							font-size: 28rpx;
+							color: $uni-text-color-grey;
+						}
 					}
 				}
 			}
