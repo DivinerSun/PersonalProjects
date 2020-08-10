@@ -13,8 +13,17 @@
     >     完成时间：2020/07/20
 
 -   **full_todo**
+
     > 使用 React + Koa + Sequlize 实现的基于 RESTAPI 风格的全栈 TodoList 项目
     >
     > -   **项目周期**
     >     起始时间：2020/07/22
     >     完成时间：2020/08/07
+
+-   **yike-times**
+
+    > 使用 uni-app + express + mongodb + socket 打造的一款聊天 APP
+    >
+    > -   **项目周期**
+    >     起始时间：2020/08/07
+    >     完成时间：?
