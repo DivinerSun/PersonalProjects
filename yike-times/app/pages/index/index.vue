@@ -75,6 +75,7 @@
 			position: fixed;
 			top: 0;
 			background: $uni-bg-color;
+			box-shadow:0px 1px 0px 0px rgba(0,0,0,0.1);
 			z-index: 999;
 			padding-top: var(--status-bar-height);
 				
