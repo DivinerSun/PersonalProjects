@@ -33,6 +33,8 @@
 </template>
 
 <script>
+	import { test } from '../../api/user.js'
+	
 	export default {
 		data() {
 			return {
@@ -52,6 +54,11 @@
 					this.showTip = true;
 					this.tipContent = '请填写用户名或密码';
 				} else {
+					test({
+						...formdata
+					}).then(res => {
+						console.log('登录：', res)
+					})
 					uni.showModal({
 						content: '表单数据内容：' + JSON.stringify(formdata),
 						showCancel: false
