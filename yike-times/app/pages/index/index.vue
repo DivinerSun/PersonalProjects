@@ -2,14 +2,14 @@
 	<view class="container">
 		<view class="top">
 			<view class="top-left">
-				<image src="../../static/logo.png"></image>
+				<image src="../../static/images/logo.png"></image>
 			</view>
 			<view class="top-center">
-				<image src="../../static/images/index/logo.png"></image>
+				<image src="../../static/images/logo.png"></image>
 			</view>
 			<view class="top-right">
-				<image class="search" src="../../static/images/index/search.png"></image>
-				<image src="../../static/images/index/add.png"></image>
+				<image class="search" src="../../static/images/search.png"></image>
+				<image src="../../static/images/add.png"></image>
 			</view>
 		</view>
 		<view class="messages">

@@ -18,9 +18,11 @@ routers.use("*", (req, res, next) => {
 
 routers.use("*", (err, req, res, next) => {
     if (err) {
+        console.log(err);
         res.send({
             code: 5000,
             msg: "服务器内部错误！",
+            data: err.message,
         });
     }
     next();

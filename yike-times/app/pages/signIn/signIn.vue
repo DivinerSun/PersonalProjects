@@ -1,7 +1,7 @@
 <template>
 	<view class="sign-in">
 		<view class="logo">
-			<image src="../../static/images/index/logo.png" ></image>
+			<image src="../../static/images/logo.png" ></image>
 		</view>
 		<view class="intro">
 			<text class="title">登 录</text>
@@ -10,8 +10,11 @@
 		<view class="login-form">
 			<form @submit="formSubmit">
 				<view>
-					<input @focus="handleFocus" name="username" placeholder="请输入用户名或手机号" placeholder-class="ph" />
-					<input @focus="handleFocus" :password="true" name="password" placeholder="请输入用户密码" placeholder-class="ph" />
+					<input @focus="handleFocus" name="username" placeholder="请输入用户名或邮箱" placeholder-class="ph" />
+					<input @focus="handleFocus" :password="!showPwd" name="password" placeholder="请输入用户密码" placeholder-class="ph">
+						<image v-if="!showPwd" src="../../static/svg/eye.svg" @click="showOrHidePwd" style="height: 26rpx; margin-top: -100rpx;"></image>
+						<image v-if="showPwd" src="../../static/svg/eye-open.svg" @click="showOrHidePwd"></image>
+					</input>
 					<text v-if="showTip" class="tip">{{tipContent}}</text>
 				</view>
 				<view>
@@ -22,7 +25,7 @@
 		<view class="links">
 			<text>
 				暂无账号？
-				<text class="link">去注册</text>
+				<text class="link" @click="jumpSignUp">去注册</text>
 			</text>
 			<text>
 				忘记密码？
@@ -39,10 +42,19 @@
 		data() {
 			return {
 				showTip: false,
+				showPwd: false,
 				tipContent: '',
 			}
 		},
 		methods: {
+			jumpSignUp: function() {
+				uni.navigateTo({
+					url: '../signUp/signUp',
+				})
+			},
+			showOrHidePwd: function() {
+				this.showPwd = !this.showPwd;
+			},
 			handleFocus: function() {
 				this.showTip = false;
 				this.tipContent = '';
@@ -125,6 +137,15 @@
 				line-height: 44rpx;
 				margin: 60rpx 0;
 				border-bottom: 1px solid $uni-border-color;
+				padding: 0 0 10rpx 20rpx;
+			}
+			
+			image {
+				width: 46rpx;
+				height: 46rpx;
+				position: absolute;
+				right: 72rpx;
+				margin-top: -112rpx;
 			}
 			
 			button {
