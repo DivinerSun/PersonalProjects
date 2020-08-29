@@ -1,4 +1,4 @@
-const User = require("../models/user");
+const { User } = require("../models");
 
 exports.findUserList = (params) => {
     return User.find((err, res) => {
