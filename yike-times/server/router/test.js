@@ -7,8 +7,9 @@ router.get("/", async (req, res) => {
     res.send({
         code: 2000,
         msg: "SUCCESS",
-        data: list,
-        // data: "Testting……",
+        data: {
+            list,
+        },
     });
 });
 
