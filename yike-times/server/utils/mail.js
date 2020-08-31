@@ -37,12 +37,12 @@ const sendEmail = (options) => {
             if (!err) {
                 resolve({
                     code: "MAIL_SEND_SUCCESS",
-                    msg,
+                    result: msg,
                 });
             } else {
                 reject({
                     code: "MAIL_SEND_FAILED",
-                    err,
+                    result: err,
                 });
             }
         });
