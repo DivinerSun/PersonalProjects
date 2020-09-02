@@ -10,8 +10,8 @@
 		<view class="login-form">
 			<form @submit="formSubmit">
 				<view>
-					<input @focus="handleFocus" name="username" placeholder="请输入用户名或邮箱" placeholder-class="ph" />
-					<input @focus="handleFocus" :password="!showPwd" name="password" placeholder="请输入用户密码" placeholder-class="ph">
+					<input @focus="handleFocus" name="email" placeholder="请输入邮箱" placeholder-class="ph" />
+					<input @focus="handleFocus" :password="!showPwd" name="pwd" placeholder="请输入用户密码" placeholder-class="ph">
 						<image v-if="!showPwd" src="../../static/svg/eye.svg" @click="showOrHidePwd" style="height: 26rpx; margin-top: -100rpx;"></image>
 						<image v-if="showPwd" src="../../static/svg/eye-open.svg" @click="showOrHidePwd"></image>
 					</input>
@@ -36,7 +36,8 @@
 </template>
 
 <script>
-	import { test } from '../../api/user.js'
+	import { signin } from '../../api/user.js'
+	import { validateFormData, setStorageItem } from '../../utils/index.js'
 	
 	export default {
 		data() {
@@ -44,6 +45,10 @@
 				showTip: false,
 				showPwd: false,
 				tipContent: '',
+				rules: {
+					email: { required: true, message: '邮箱不能为空' },
+					pwd: { required: true, message: '密码不能为空' },
+				},
 			}
 		},
 		methods: {
@@ -60,21 +65,25 @@
 				this.tipContent = '';
 			},
 			formSubmit: function(e) {
-				console.log('form发生了submit事件，携带数据为：' + JSON.stringify(e.detail.value))
-				var formdata = e.detail.value
-				if (!formdata.username || !formdata.password) {
+				const formdata = e.detail.value
+				const validate = validateFormData(formdata, this.rules);
+				if (validate) {
 					this.showTip = true;
-					this.tipContent = '请填写用户名或密码';
+					this.tipContent = validate;
 				} else {
-					test({
+					signin({
 						...formdata
 					}).then(res => {
-						console.log('登录：', res)
+						if(res.code === 2000) {
+							setStorageItem('user', res.data.user)
+							uni.navigateTo({
+								url: '../index/index'
+							})
+						} else {
+							this.showTip = true;
+							this.tipContent = res.msg;
+						}
 					})
-					uni.showModal({
-						content: '表单数据内容：' + JSON.stringify(formdata),
-						showCancel: false
-					});
 				}
 			},
 		}

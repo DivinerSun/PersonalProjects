@@ -32,3 +32,45 @@ export const formatTime = (d) => {
 		return `${from_Y}/${from_M < 10 ? '0' + from_M : from_M}/${from_D < 10 ? '0' + from_D : from_D}  ${from_H < 10 ? '0' + from_H : from_H}:${from_m < 10 ? '0' + from_m : from_m}`
 	}
 }
+
+
+/**
+ * 表单数据校验函数
+ * @param {Object}  formData  表单数据
+ * @param {Array}  rules  表单数据
+ */
+export const validateFormData = (formData = {}, rules = {}) => {
+	let result = '';
+	for (let key in formData) {
+		const rule = rules[key]
+		const val = formData[key]
+		if (rule.required && !val) {
+			result = rule.message
+			break
+		}
+		if (rule.validate) {
+			result = rule.validate()
+			if (result) {
+				break
+			}
+		}
+	}
+	
+	return result;
+}
+
+// localStorage 操作方法
+export const setStorageItem = (key, val) => {
+	try {
+		window.localStorage.setItem(key, JSON.stringify(val))
+	} catch (error) {
+		try {
+			window.localStorage.setItem(key, JSON.stringify(val))
+		} catch (error) {
+			
+		}
+	}
+}
+export const getStorageItem = (key) => {
+	return window.localStorage.getItem(key)
+}

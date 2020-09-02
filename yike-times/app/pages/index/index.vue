@@ -33,7 +33,7 @@
 </template>
 
 <script>
-	import { formatTime } from '../../utils/index.js'
+	import { formatTime, getStorageItem } from '../../utils/index.js'
 	import { messageArray } from '../../utils/mock.js'
 	
 	export default {
@@ -43,9 +43,20 @@
 			}
 		},
 		onLoad() {
-			this.getMessages()
+			this.checkLogin()
 		},
 		methods: {
+			// 检测用户是否登录
+			checkLogin() {
+				const user = getStorageItem('user')
+				if (!user) {
+					uni.navigateTo({
+						url: '../signIn/signIn'
+					})
+				} else {
+					this.getMessages()
+				}
+			},
 			// 时间处理
 			parseTime(date) {
 				return formatTime(date)

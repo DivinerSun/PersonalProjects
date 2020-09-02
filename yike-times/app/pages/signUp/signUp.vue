@@ -13,12 +13,16 @@
 		<view class="login-form">
 			<form @submit="formSubmit">
 				<view>
-					<input @focus="handleFocus" name="username" placeholder="注册邮箱" placeholder-class="ph" />
-					<input @focus="handleFocus" name="username" placeholder="取一个名字" placeholder-class="ph" />
-					<input @focus="handleFocus" :password="!showPwd" name="password" placeholder="用户密码" placeholder-class="ph">
+					<input @focus="handleFocus" name="email" placeholder="注册邮箱" placeholder-class="ph" @blur="setEmail" />
+					<input @focus="handleFocus" name="nickName" placeholder="个性的昵称" placeholder-class="ph" />
+					<input @focus="handleFocus" :password="!showPwd" name="pwd" placeholder="用户密码" placeholder-class="ph">
 						<image v-if="!showPwd" src="../../static/svg/eye.svg" @click="showOrHidePwd" style="height: 26rpx; margin-top: -100rpx;"></image>
 						<image v-if="showPwd" src="../../static/svg/eye-open.svg" @click="showOrHidePwd"></image>
 					</input>
+					<view class="code">
+						<input @focus="handleFocus" name="code" placeholder="验证码(区分大小写)" placeholder-class="ph" />
+						<button :disabled="codeBtnStatus" :style="codeBtnStatus && 'background: #ccc; color: #999;'" @click="getEmailCode">{{!codeBtnStatus ? '获取邮箱验证码' : time + '秒后重新发送'}}</button>
+					</view>
 					<text v-if="showTip" class="tip">{{tipContent}}</text>
 				</view>
 				<view>
@@ -30,7 +34,8 @@
 </template>
 
 <script>
-	import { test } from '../../api/user.js'
+	import { getCode, signup } from '../../api/user.js'
+	import { validateFormData } from '../../utils/index.js'
 	
 	export default {
 		data() {
@@ -38,11 +43,31 @@
 				showTip: false,
 				showPwd: false,
 				tipContent: '',
+				rules: {
+					email: { required: true, message: '邮箱不能为空', validate: this.validateEmail },
+					pwd: { required: true, message: '密码不能为空' },
+					nickName: { required: true, message: '昵称不能为空' },
+					code: { required: true, message: '验证码不能为空' },
+				},
+				email: '',
+				time: 60,
+				codeBtnStatus: false,
 			}
 		},
 		methods: {
+			validateEmail: function(val) {
+				const email = this.email
+				const reg = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+				const res = reg.test(email)
+				if (!res) {
+					return '邮箱格式不正确'
+				}
+			},
+			setEmail: function(e) {
+				this.email = e.detail.value
+			},
 			returnSignin: function() {
-				uni.navigateBack()
+				uni.navigateBack();
 			},
 			showOrHidePwd: function() {
 				this.showPwd = !this.showPwd;
@@ -51,22 +76,58 @@
 				this.showTip = false;
 				this.tipContent = '';
 			},
-			formSubmit: function(e) {
-				console.log('form发生了submit事件，携带数据为：' + JSON.stringify(e.detail.value))
-				var formdata = e.detail.value
-				if (!formdata.username || !formdata.password) {
+			getEmailCode: function() {
+				if (!this.email) {
 					this.showTip = true;
-					this.tipContent = '请填写用户名或密码';
+					this.tipContent = '请填写邮箱';
+					return
+				}
+				if (this.validateEmail(this.email)) {
+					this.showTip = true;
+					this.tipContent = '邮箱格式不正确';
+					return
+				}
+				getCode({
+					email: this.email
+				}).then(res => {
+					if(res.code === 2000) {
+						const timer = setInterval(() => {
+							this.codeBtnStatus = true;
+							this.time --;
+							if (this.time === 0) {
+								clearInterval(timer);
+								this.codeBtnStatus = false;
+								this.time = 60;
+							}
+						}, 1000)
+					} else {
+						this.showTip = true;
+						this.tipContent = res.msg;
+					}
+				})
+			},
+			formSubmit: function(e) {
+				const formdata = e.detail.value;
+				const validate = validateFormData(formdata, this.rules);
+				if (validate) {
+					this.showTip = true;
+					this.tipContent = validate;
 				} else {
-					test({
+					signup({
 						...formdata
 					}).then(res => {
-						console.log('登录：', res)
+						if(res.code === 2000) {
+							uni.showModal({
+								title: '提示信息',
+								content: res.msg,
+								confirmText: '去登录',
+								success: this.returnSignin,
+							})
+						} else {
+							this.showTip = true;
+							this.tipContent = res.msg;
+						}
 					})
-					uni.showModal({
-						content: '表单数据内容：' + JSON.stringify(formdata),
-						showCancel: false
-					});
 				}
 			},
 		}
@@ -92,7 +153,7 @@
 	.logo {
 		display: flex;
 		justify-content: center;
-		padding-top: 256rpx;
+		padding-top: 60rpx;
 		
 		image {
 			width: 194rpx;
@@ -122,7 +183,7 @@
 		margin: 72rpx 62rpx 0;
 		
 		.ph {
-			font-size: 12px;
+			font-size: 24rpx;
 			color: $uni-text-color-disable;
 		}
 		
@@ -159,6 +220,25 @@
 				border-radius: 48rpx;
 				background: $uni-color-primary;
 				box-shadow:0px 25px 16px -18px rgba(255,228,49,0.4);
+			}
+		}
+		
+		.code {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			margin-top: -60rpx;
+			
+			input {
+				width: 60%;
+			}
+			
+			button {
+				width: 35%;
+				height:56rpx;
+				border-radius: 24rpx;
+				font-size: 24rpx;
+				margin: unset;
 			}
 		}
 	}

@@ -1,4 +1,4 @@
-const baseUrl = 'http://localhost:8088/api'
+import { baseUrl } from '../config/index.js'
 
 /**
  * 封装请求方法
