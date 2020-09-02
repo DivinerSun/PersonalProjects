@@ -1,9 +1,11 @@
 const routers = require("express").Router();
 
 // routers
+const commonRouter = require("./common");
 const testRouter = require("./test");
 const userRouter = require("./user");
 
+routers.use("/common", commonRouter);
 routers.use("/test", testRouter);
 routers.use("/user", userRouter);
 

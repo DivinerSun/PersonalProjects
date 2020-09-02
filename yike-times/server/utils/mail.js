@@ -4,9 +4,10 @@ const Auth = require("./auth");
 /**
  * 发送邮件方法
  * @param {Object} options 邮件发送参数
- *    @param emails: 接收者邮箱地址
- *    @param subject: 邮件标题
- *    @param code: 验证码
+ *    @param {String|Array} emails: 接收者邮箱地址
+ *    @param {String} subject: 邮件标题
+ *    @param {String} code: 验证码
+ *    @param {Number} minute: 有效时间(分钟)
  */
 const sendEmail = (options) => {
     const mailTransport = {
@@ -29,7 +30,14 @@ const sendEmail = (options) => {
         from: '"逸刻时光 👻" <sqq_job@sina.com>',
         to: options.emails,
         subject: `✔ ${options.subject || "逸刻时光验证码"} ✔`,
-        html: `<b>您的验证码为：<span style='color: #FFE431; font-size: 18px;'>${options.code}</span></b>`,
+        html: `<b>您的验证码为：
+            <span style='color: #FFE431; font-size: 18px;'>${
+                options.code
+            }</span>
+            <span>当前验证码有效期为 ${
+                options.minute || 3
+            } 分钟。请及时使用！</span>
+        </b>`,
     };
 
     return new Promise((resolve, reject) => {

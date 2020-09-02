@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const db = require("../config/db");
+const { encryption } = require("../utils");
 
 const Schema = mongoose.Schema;
 
@@ -12,6 +13,7 @@ const UserSchema = Schema({
     pwd: {
         type: String,
         default: "",
+        set: encryption,
     },
     name: {
         type: String,
