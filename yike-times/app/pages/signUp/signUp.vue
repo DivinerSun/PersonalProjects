@@ -192,7 +192,7 @@
 			
 			.tip {
 				float: left;
-				margin-top: -40rpx;
+				margin-top: -20rpx;
 				font-size: 28rpx;
 				color: $uni-color-error;
 			}

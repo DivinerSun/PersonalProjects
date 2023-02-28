@@ -50,7 +50,6 @@ exports.saveOneUser = async (res, data) => {
 
 // 用户登录
 exports.findOneUser = async (res, data) => {
-    console.log(data);
     const user = await User.findOne({ email: data.email });
     if (!user) {
         res.json({

@@ -18,6 +18,13 @@
 				"navigationStyle":"custom"
 			}
         }
+        ,{
+            "path" : "pages/search/search",
+            "style" : {
+                "navigationStyle":"custom"
+            }
+            
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",

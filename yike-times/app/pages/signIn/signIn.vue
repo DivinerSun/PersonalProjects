@@ -22,7 +22,7 @@
 				</view>
 			</form>
 		</view>
-		<view class="links">
+		<view class="links"> 
 			<text>
 				暂无账号？
 				<text class="link" @click="jumpSignUp">去注册</text>
@@ -136,7 +136,7 @@
 			
 			.tip {
 				float: left;
-				margin-top: -40rpx;
+				margin-top: -20rpx;
 				font-size: 28rpx;
 				color: $uni-color-error;
 			}

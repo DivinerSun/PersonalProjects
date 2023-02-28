@@ -63,14 +63,20 @@ export const validateFormData = (formData = {}, rules = {}) => {
 export const setStorageItem = (key, val) => {
 	try {
 		window.localStorage.setItem(key, JSON.stringify(val))
-	} catch (error) {
-		try {
-			window.localStorage.setItem(key, JSON.stringify(val))
-		} catch (error) {
-			
-		}
+	} catch (e) {
+	} finally {
+		window.localStorage.setItem(key, JSON.stringify(val))
 	}
 }
 export const getStorageItem = (key) => {
 	return window.localStorage.getItem(key)
+}
+export const removeStorageItem = (key) => {
+	try{
+		window.localStorage.removeItem(key)
+	}catch(e){
+	} finally {
+		window.localStorage.removeItem(key)
+	}
+	
 }

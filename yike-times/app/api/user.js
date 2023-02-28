@@ -18,7 +18,6 @@ export const signup = (data) => {
 	})
 }
 
-
 // 用户登录
 export const signin = (data) => {
 	return request({
